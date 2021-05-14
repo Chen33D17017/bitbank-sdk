@@ -2,6 +2,8 @@ package main
 
 import (
 	//"encoding/csv"
+	"bitbank-sdk/bitbank"
+	"bitbank-sdk/bitbank/model"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -13,23 +15,23 @@ import (
 )
 
 func main() {
-	cryptmsg, err := getPrice("btc")
+	cryptmsg, err := bitbank.GetPrice("btc")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Printf("crypt %s buy %s ,sell %s, high: %s, low: %s, vol: %s\n", "eth", cryptmsg.Data.Buy, cryptmsg.Data.Sell, cryptmsg.Data.High, cryptmsg.Data.Low, cryptmsg.Data.Vol)
+	fmt.Printf("crypt %s buy %s ,sell %s, high: %s, low: %s, vol: %s\n", "eth", cryptmsg.Buy, cryptmsg.Sell, cryptmsg.High, cryptmsg.Low, cryptmsg.Vol)
 
-	secretFile, err := os.Open("secret2.json")
+	secretFile, err := os.Open("secret3.json")
 
 	checkError("Fail to read secret %s", err)
 	defer secretFile.Close()
 
 	byteValue, _ := ioutil.ReadAll(secretFile)
 
-	var secretKeeper SecretKeeper
-	json.Unmarshal(byteValue, &secretKeeper)
+	var secret model.Secret
+	json.Unmarshal(byteValue, &secret)
 
-	assets, err := checkAssets(secretKeeper)
+	assets, err := bitbank.CheckAssets(secret)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -38,20 +40,13 @@ func main() {
 		fmt.Println(asset)
 	}
 
-	trades, err := getTradeHistory(secretKeeper, "btc")
+	trades, err := bitbank.GetTradeHistory(secret, "eth")
 
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
 
-	file, err := os.OpenFile("btc.csv", os.O_CREATE|os.O_WRONLY, 0777)
-	defer file.Close()
-
-	if err != nil {
-		os.Exit(1)
-	}
-
-	sort.Sort(Trades(trades))
+	sort.Sort(model.Trades(trades))
 	count := 0.0
 	total := 0.0
 	for _, trade := range trades {

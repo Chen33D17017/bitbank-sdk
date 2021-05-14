@@ -4,12 +4,12 @@ import (
 	"bitbank-sdk/bitbank/model"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
-func getPrice(cryp string) (model.Price, error) {
-	var price model.Price
+func GetPrice(cryp string) (model.Price, error) {
+	// https://medium.com/@alain.drolet.0/how-to-unmarshal-an-array-of-json-objects-of-different-types-into-a-go-struct-10eab5f9a3a2
+	var rst model.PriceRst
 	url := fmt.Sprintf("https://public.bitbank.cc/%s_jpy/ticker", cryp)
 	method := "GET"
 
@@ -17,22 +17,19 @@ func getPrice(cryp string) (model.Price, error) {
 	req, err := http.NewRequest(method, url, nil)
 
 	if err != nil {
-		return price, fmt.Errorf("getPrice err: %s", err.Error())
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		return price, fmt.Errorf("getPrice err: %s", err.Error())
-	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return price, fmt.Errorf("getPrice err: %s", err.Error())
+		return rst.Data, fmt.Errorf("Fail to buiild request: %s", err.Error())
 	}
 
-	err = json.Unmarshal(body, &price)
+	resp, err := client.Do(req)
 	if err != nil {
-		return price, fmt.Errorf("getPrice err: %s", err.Error())
+		return rst.Data, fmt.Errorf("Request err: %s", err.Error())
 	}
-	return price, nil
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&rst)
+	if err != nil {
+		return rst.Data, err
+	}
+
+	return rst.Data, nil
 }
