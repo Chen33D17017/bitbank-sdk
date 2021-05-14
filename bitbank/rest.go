@@ -141,3 +141,13 @@ func GetTradeHistory(s model.Secret, assetType string) ([]model.Trade, error) {
 	}
 	return response.Data.Trades, nil
 }
+
+func GetOrderInfo(s model.Secret, assetType, order_id string) (model.Order, error) {
+	var response model.OrderRst
+	url := fmt.Sprintf("/v1/user/spot/order?pair=%s_jpy&order_id=%s", assetType, order_id)
+	err := getRequest(s, url, &response)
+	if err != nil {
+		return response.Data, err
+	}
+	return response.Data, nil
+}

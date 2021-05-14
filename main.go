@@ -21,7 +21,7 @@ func main() {
 	}
 	fmt.Printf("crypt %s buy %s ,sell %s, high: %s, low: %s, vol: %s\n", "eth", cryptmsg.Buy, cryptmsg.Sell, cryptmsg.High, cryptmsg.Low, cryptmsg.Vol)
 
-	secretFile, err := os.Open("secret3.json")
+	secretFile, err := os.Open("secret.json")
 
 	checkError("Fail to read secret %s", err)
 	defer secretFile.Close()
@@ -39,6 +39,15 @@ func main() {
 	for _, asset := range assets {
 		fmt.Println(asset)
 	}
+
+	order, err := bitbank.GetOrderInfo(secret, "eth", "14311737335")
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	fmt.Println(order)
+	avgPrice, _ := strconv.Atoi(order.AveragePrice)
+	amount, _ := strconv.ParseFloat(order.StartAmount, 64)
+	fmt.Println(float64(avgPrice) * amount)
 
 	trades, err := bitbank.GetTradeHistory(secret, "eth")
 

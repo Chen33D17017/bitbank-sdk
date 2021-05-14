@@ -12,6 +12,7 @@ type OrderRes struct {
 type Order struct {
 	OrderId         int64  `json:"order_id"`
 	Pair            string `json:"pair"`
+	Side            string `json:"side"`
 	Type            string `json:"type"`
 	StartAmount     string `json:"start_amount"`
 	RemainingAmount string `json:"remaining_amount"`
