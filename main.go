@@ -2,8 +2,6 @@ package main
 
 import (
 	//"encoding/csv"
-	"bitbank-sdk/bitbank"
-	"bitbank-sdk/bitbank/model"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -12,6 +10,9 @@ import (
 	"os"
 	"sort"
 	"strconv"
+
+	"github.com/Chen33D17017/bitbank-sdk/bitbank"
+	"github.com/Chen33D17017/bitbank-sdk/bitbank/model"
 )
 
 func main() {

@@ -1,10 +1,11 @@
 package bitbank
 
 import (
-	"bitbank-sdk/bitbank/model"
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/Chen33D17017/bitbank-sdk/bitbank/model"
 )
 
 func GetPrice(cryp string) (model.Price, error) {

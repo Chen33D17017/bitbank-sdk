@@ -1,7 +1,6 @@
 package bitbank
 
 import (
-	"bitbank-sdk/bitbank/model"
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
@@ -12,6 +11,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/Chen33D17017/bitbank-sdk/bitbank/model"
 )
 
 func readUTC(timestamp int64) string {
